@@ -1,3 +1,27 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&family=Roboto:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"); */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * {
+    @apply m-0 p-0 box-content;
+  }
+
+  body {
+    @apply bg-gray-900 text-gray-300;
+  }
+
+  :focus {
+    @apply outline-none shadow-custom;
+  }
+
+  body,
+  input,
+  textarea,
+  button {
+    @apply font-roboto font-normal text-base;
+  }
+}

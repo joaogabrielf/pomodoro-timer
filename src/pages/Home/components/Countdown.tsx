@@ -20,9 +20,13 @@ export function Countdown() {
   const minutesAmountFixed = String(minutesAmount).padStart(2, '0')
   const secondsAmountFixed = String(secondsAmount).padStart(2, '0')
 
+  // PAGE TITLE
   useEffect(() => {
-    if (!activeCycle) return
-    document.title = `${minutesAmountFixed}:${secondsAmountFixed}`
+    if (!activeCycle) {
+      document.title = 'Pomodoro Timer'
+    } else {
+      document.title = `${minutesAmountFixed}:${secondsAmountFixed}`
+    }
   }, [minutesAmountFixed, secondsAmountFixed, activeCycle])
 
   useEffect(() => {
@@ -31,7 +35,7 @@ export function Countdown() {
     const interval = setInterval(() => {
       const passedTimeInSeconds = differenceInSeconds(
         new Date(),
-        activeCycle.startDate,
+        new Date(activeCycle.startDate),
       )
 
       if (passedTimeInSeconds >= totalSeconds) {

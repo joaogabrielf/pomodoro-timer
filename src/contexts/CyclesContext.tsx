@@ -112,10 +112,14 @@ const useCycles = () => {
 
   function interruptCurrentCycle() {
     dispatch(interruptCurrentCycleAction())
+
+    setAmountSecondsPassed(0)
   }
 
   function markCurrentCycleAsFinished() {
     dispatch(markCurrentCycleAsFinishedAction())
+
+    setAmountSecondsPassed(0)
   }
 
   function deleteCycle(id: string) {

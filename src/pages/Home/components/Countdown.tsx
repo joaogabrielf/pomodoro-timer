@@ -3,12 +3,8 @@ import { useEffect } from 'react'
 import { useCyclesContext } from '../../../contexts/CyclesContext'
 
 export function Countdown() {
-  const {
-    activeCycle,
-    markCurrentCycleAsFinished,
-    amountSecondsPassed,
-    setSecondsPassed,
-  } = useCyclesContext()
+  const { activeCycle, amountSecondsPassed, setSecondsPassed } =
+    useCyclesContext()
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
 
@@ -34,19 +30,18 @@ export function Countdown() {
   const isAdditionalTime = amountSecondsPassed > totalSeconds
 
   useEffect(() => {
-    if (!activeCycle) return
+    const interval =
+      activeCycle &&
+      setInterval(() => {
+        const passedTimeInSeconds = differenceInSeconds(
+          new Date(),
+          new Date(activeCycle.startDate),
+        )
 
-    const interval = setInterval(() => {
-      const passedTimeInSeconds = differenceInSeconds(
-        new Date(),
-        new Date(activeCycle.startDate),
-      )
-
-      setSecondsPassed(passedTimeInSeconds)
-    }, 1000)
-
+        setSecondsPassed(passedTimeInSeconds)
+      }, 100)
     return () => clearInterval(interval)
-  }, [activeCycle, totalSeconds, markCurrentCycleAsFinished, setSecondsPassed])
+  }, [activeCycle, totalSeconds, setSecondsPassed])
 
   return (
     <div className="relative flex gap-4 font-robotomono text-[10rem] leading-[8rem] text-gray-100">

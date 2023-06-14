@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useCyclesContext } from '../../../contexts/CyclesContext'
 
 export function Countdown() {
-  const { activeCycle, amountSecondsPassed, setSecondsPassed } =
+  const { activeCycle, amountSecondsPassed, setSecondsPassed, play } =
     useCyclesContext()
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
@@ -17,6 +17,11 @@ export function Countdown() {
 
   const minutes = String(minutesAmount).padStart(2, '0')
   const seconds = String(secondsAmount).padStart(2, '0')
+
+  // PLAY ALERT
+  if (activeCycle && amountSecondsPassed === totalSeconds) {
+    play()
+  }
 
   // PAGE TITLE
   useEffect(() => {

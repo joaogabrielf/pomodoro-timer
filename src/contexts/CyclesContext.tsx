@@ -14,6 +14,9 @@ import {
   markCurrentCycleAsFinishedAction,
 } from '../reducers/cycles/actions'
 import { differenceInSeconds } from 'date-fns'
+// @ts-ignore
+import useSound from 'use-sound'
+import alert from '../assets/alert.wav'
 
 interface CreateCycleData {
   task: string
@@ -30,6 +33,7 @@ interface CyclesContextType {
   createNewCycle: (data: CreateCycleData) => void
   interruptCurrentCycle: () => void
   deleteCycle: (id: string) => void
+  play: () => void
 }
 
 const CyclesContext = createContext({} as CyclesContextType)
@@ -58,6 +62,7 @@ const useCycles = () => {
     },
   )
   const { cycles, activeCycleId } = cyclesState
+  const [play] = useSound(alert)
 
   const cyclesFixedDates = cycles.map((cycle) => {
     const startDate = new Date(cycle.startDate)
@@ -136,6 +141,7 @@ const useCycles = () => {
     interruptCurrentCycle,
     createNewCycle,
     deleteCycle,
+    play,
   }
 }
 

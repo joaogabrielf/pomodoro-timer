@@ -9,6 +9,7 @@ import {
 import { Cycle, cyclesReducer } from '../reducers/cycles/reducer'
 import {
   createNewCycleAction,
+  deleteCycleAction,
   interruptCurrentCycleAction,
   markCurrentCycleAsFinishedAction,
 } from '../reducers/cycles/actions'
@@ -28,6 +29,7 @@ interface CyclesContextType {
   setSecondsPassed: (seconds: number) => void
   createNewCycle: (data: CreateCycleData) => void
   interruptCurrentCycle: () => void
+  deleteCycle: (id: string) => void
 }
 
 const CyclesContext = createContext({} as CyclesContextType)
@@ -56,7 +58,28 @@ const useCycles = () => {
     },
   )
   const { cycles, activeCycleId } = cyclesState
-  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
+
+  const cyclesFixedDates = cycles.map((cycle) => {
+    const startDate = new Date(cycle.startDate)
+    const interruptedDate = cycle.interruptedDate
+      ? new Date(cycle.interruptedDate)
+      : cycle.interruptedDate
+
+    const finishedDate = cycle.finishedDate
+      ? new Date(cycle.finishedDate)
+      : cycle.finishedDate
+
+    return {
+      ...cycle,
+      startDate,
+      interruptedDate,
+      finishedDate,
+    }
+  })
+
+  const activeCycle = cyclesFixedDates.find(
+    (cycle) => cycle.id === activeCycleId,
+  )
 
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(() => {
     if (activeCycle) {
@@ -95,8 +118,12 @@ const useCycles = () => {
     dispatch(markCurrentCycleAsFinishedAction())
   }
 
+  function deleteCycle(id: string) {
+    dispatch(deleteCycleAction(id))
+  }
+
   return {
-    cycles,
+    cycles: cyclesFixedDates,
     activeCycle,
     activeCycleId,
     amountSecondsPassed,
@@ -104,6 +131,7 @@ const useCycles = () => {
     setSecondsPassed: (seconds: number) => setAmountSecondsPassed(seconds),
     interruptCurrentCycle,
     createNewCycle,
+    deleteCycle,
   }
 }
 

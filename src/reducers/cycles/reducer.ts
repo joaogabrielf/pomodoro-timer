@@ -46,6 +46,16 @@ export function cyclesReducer(state: CyclesState, action: any) {
         }
       })
 
+    case ActionTypes.DELETE_CYCLE:
+      return produce(state, (draft) => {
+        const cycleIndex = draft.cycles.findIndex(
+          (cycle) => cycle.id === action.payload.id,
+        )
+        if (cycleIndex !== -1) {
+          draft.cycles.splice(cycleIndex, 1)
+        }
+      })
+
     default:
       return state
   }

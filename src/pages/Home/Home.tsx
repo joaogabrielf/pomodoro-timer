@@ -17,8 +17,13 @@ const newCycleFormValidationSchema = z.object({
 type NewCycleFormData = z.infer<typeof newCycleFormValidationSchema>
 
 export function Home() {
-  const { activeCycle, createNewCycle, interruptCurrentCycle } =
-    useCyclesContext()
+  const {
+    activeCycle,
+    createNewCycle,
+    interruptCurrentCycle,
+    markCurrentCycleAsFinished,
+    amountSecondsPassed,
+  } = useCyclesContext()
 
   const newCycleForm = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
@@ -33,6 +38,14 @@ export function Home() {
   function handleCreateNewCycle(data: NewCycleFormData) {
     createNewCycle(data)
     reset()
+  }
+
+  let isFinished = false
+
+  if (activeCycle) {
+    const totalSeconds = activeCycle.minutesAmount * 60
+
+    isFinished = amountSecondsPassed > totalSeconds
   }
 
   const task = watch('task')
@@ -50,7 +63,7 @@ export function Home() {
         </FormProvider>
         <Countdown />
 
-        {activeCycle ? (
+        {activeCycle && !isFinished && (
           <button
             type="button"
             onClick={interruptCurrentCycle}
@@ -59,7 +72,19 @@ export function Home() {
             <HandPalm size={24} />
             Stop
           </button>
-        ) : (
+        )}
+        {activeCycle && isFinished && (
+          <button
+            type="button"
+            onClick={markCurrentCycleAsFinished}
+            className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-[8px] border-0 bg-green-500 p-4 font-bold text-gray-100 shadow-green-700 transition-colors disabled:cursor-not-allowed disabled:opacity-70 [&:not(:disabled):hover]:bg-green-700"
+          >
+            <HandPalm size={24} />
+            Finish
+          </button>
+        )}
+
+        {!activeCycle && (
           <button
             type="submit"
             disabled={isSubmitDisabled}
